@@ -4,7 +4,7 @@ const queries = require('../db/queries');
 const jwt = require('jsonwebtoken');
 
 /**
- * POST /api/users/signup
+ * POST /api/auth/signup
  */
 router.post('/signup', (req, res) => {
   bcrypt
@@ -20,22 +20,26 @@ router.post('/signup', (req, res) => {
       });
     })
     .catch((err) => {
-      return res
-        .status(400)
-        .json({ message: 'Please enter required information' });
+      res.status(400).json({ message: 'Please enter required information' });
     });
 });
 
 /**
- * POST /api/users/login
+ * POST /api/auth/login
  */
 router.post('/login', (req, res) => {
-  // FIXME: should be user DB row
   queries
     .getUserByEmail(req.body.email)
     .then((user) => bcrypt.compare(req.body.password, user.password))
-    .then((isMatch) => {})
-    .catch();
+    .then(() => {
+      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+        expiresIn: '24h',
+      });
+      res.status(200).json({ user, token });
+    })
+    .catch((err) => {
+      res.status(400).json({ message: 'Invalid credentials.' });
+    });
 });
 
 module.exports = router;

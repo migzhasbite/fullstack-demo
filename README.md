@@ -22,7 +22,7 @@ $
 
 ```
 $ mysql -u root -p // enter your MySQL password at prompt
-mysql> CREATE DATABASE fullstack-demo;
+mysql> CREATE DATABASE fullstack_demo;
 ```
 
 Press CONTROL+D to exit.
