@@ -13,10 +13,25 @@
 
 ## Installation Instructions
 
-### Setup
+```bash
+$ npm i
+$
+```
+
+### DB setup
 
 ```
+$ mysql -u root -p // enter your MySQL password at prompt
+mysql> CREATE DATABASE fullstack-demo;
+```
+
+Press CONTROL+D to exit.
+
+### Setup
+
+```bash
 $ cp .env.sample .env
+$ knex migrate:latest
 ```
 
 ### Database configuration
