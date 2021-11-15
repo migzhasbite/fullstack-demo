@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import './App.css';
 import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import './App.css';
 
 function App() {
   return (
     <Router>
       <Switch>
-        {/* <Route /> */}
+        <Route path={'/login'} component={Login} />
         <ProtectedRoute path={'/'} component={null} />
       </Switch>
     </Router>
