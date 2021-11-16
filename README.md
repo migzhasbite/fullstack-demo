@@ -35,3 +35,7 @@ $ knex migrate:latest
 ```
 
 ### Database configuration
+
+### Notes
+
+On client side: if building from scratch, you must `npm install react-router-dom@5.2.0` as 6.x is not backward compatible
