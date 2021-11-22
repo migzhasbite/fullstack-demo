@@ -1,12 +1,8 @@
-const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-/**
- * POST /api/auth/signup
- */
-router.post('/signup', (req, res) => {
+exports.signUpUser = (req, res) => {
   bcrypt
     .hash(req.body.password, 8)
     .then((password) => {
@@ -22,13 +18,10 @@ router.post('/signup', (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: 'Please enter required information' });
     });
-});
+};
 
-/**
- * POST /api/auth/login
- */
-router.post('/login', (req, res) => {
-  // I need this for line 41 to "see" the user
+exports.signInUser = (req, res) => {
+  // I need this for line 43 to "see" confirmedUser
   let confirmedUser;
 
   User.findOne({ email: req.body.email })
@@ -36,7 +29,10 @@ router.post('/login', (req, res) => {
       confirmedUser = { ...user };
       return bcrypt.compare(req.body.password, user.password);
     })
-    .then(() => {
+    .then((isMatch) => {
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid credentials.' });
+      }
       const token = jwt.sign(
         { email: confirmedUser.email },
         process.env.JWT_SECRET,
@@ -44,11 +40,18 @@ router.post('/login', (req, res) => {
           expiresIn: '24h',
         }
       );
-      res.status(200).json({ user: confirmedUser, token });
+      return res.status(200).json({ user: confirmedUser, token });
     })
     .catch((err) => {
-      res.status(400).json({ message: 'Invalid credentials.' });
+      return res.status(500).json({ err });
     });
-});
+};
 
-module.exports = router;
+exports.getCurrentUser = (req, res, next) => {
+  // If our code gets here, it went through our middleware
+  // first so we should have our email address of the logged in person through req.user.
+  User.findOne({ email: req.user }).then((user) => {
+    // Respond with the user data (except password)
+    return res.json({ ...user, password: null });
+  });
+};
