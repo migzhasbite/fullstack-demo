@@ -3,16 +3,25 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 exports.signUpUser = (req, res) => {
+  // 1. Hash the password so we're not saving as plaintext
   bcrypt
     .hash(req.body.password, 8)
     .then((password) => {
       // create a row to the DB user table
       const userObj = { ...req.body, password: password };
       User.create(userObj).then((user) => {
-        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-          expiresIn: '24h',
-        });
-        res.status(201).json({ user, token });
+        // In MySQL, inserting a row gives something like [id]
+        // where "id" is the id of the new row
+        const token = jwt.sign(
+          { email: userObj.email },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: '24h',
+          }
+        );
+        res
+          .status(201)
+          .json({ user: { id: user[0], email: userObj.email }, token });
       });
     })
     .catch((err) => {
@@ -21,10 +30,10 @@ exports.signUpUser = (req, res) => {
 };
 
 exports.signInUser = (req, res) => {
-  // I need this for line 43 to "see" confirmedUser
+  // I need this for line 37 to "see" confirmedUser
   let confirmedUser;
 
-  User.findOne({ email: req.body.email })
+  User.findOneWithPW({ email: req.body.email })
     .then((user) => {
       confirmedUser = { ...user };
       return bcrypt.compare(req.body.password, user.password);
@@ -40,11 +49,11 @@ exports.signInUser = (req, res) => {
           expiresIn: '24h',
         }
       );
+      // Don't give the password, even if it's hashed!
+      delete confirmedUser.password;
       return res.status(200).json({ user: confirmedUser, token });
     })
-    .catch((err) => {
-      return res.status(500).json({ err });
-    });
+    .catch((err) => res.status(500).json({ err }));
 };
 
 exports.getCurrentUser = (req, res, next) => {
@@ -52,6 +61,7 @@ exports.getCurrentUser = (req, res, next) => {
   // first so we should have our email address of the logged in person through req.user.
   User.findOne({ email: req.user }).then((user) => {
     // Respond with the user data (except password)
-    return res.json({ ...user, password: null });
+    delete user.password;
+    return res.json({ user });
   });
 };
