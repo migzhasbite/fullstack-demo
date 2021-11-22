@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import AuthButton from './AuthButton';
 
 /**
  * The navbar gets should display, no matter if the user is logged in or out.
@@ -6,9 +7,6 @@ import { Link } from 'react-router-dom';
  *  - if the user isn't logged in, give a generic message with instructions.
  */
 const Navbar = ({ user, hasFailedAuth }) => {
-  const logout = () => {
-    sessionStorage.removeItem('token');
-  };
   return (
     <div className="navbar">
       <span className="logo">
@@ -19,10 +17,13 @@ const Navbar = ({ user, hasFailedAuth }) => {
       {user ? (
         <ul className="list">
           <li className="listItem">Welcome, {user.email}</li>
-          <li className="listItem" onClick={logout}>
-            <Link className="link" to="logout">
-              Logout
+          <li>
+            <Link className="link" to="dashboard">
+              Dashboard
             </Link>
+          </li>
+          <li className="listItem">
+            <AuthButton />
           </li>
         </ul>
       ) : (

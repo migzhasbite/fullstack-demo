@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import Nav from './components/Nav';
+import AuthButton from './components/AuthButton';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
@@ -63,9 +64,11 @@ class App extends Component {
   };
 
   render() {
+    // Note that forceRefresh={true} - super important, otherwise the Nav component won't see any changes when we log in and out.
     return (
       <Router>
-        <Nav hasFailedauth={this.state.hasFailedauth} user={this.state.user} />
+        {/* <Nav hasFailedauth={this.state.hasFailedauth} user={this.state.user} /> */}
+        <AuthButton />
         <Switch>
           <Route path={'/login'} component={Login} />
           <Route path={'/logout'} component={Logout} />
