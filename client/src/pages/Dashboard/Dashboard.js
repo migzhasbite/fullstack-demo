@@ -9,39 +9,9 @@ class Dashboard extends Component {
     failedAuth: false,
   };
 
-  componentDidMount() {
-    const token = sessionStorage.getItem('token');
+  componentDidMount() {}
 
-    if (!token) {
-      return this.setState({ failedAuth: true });
-    }
-
-    // Get the data from the API
-    axios
-      .get('/api/users/current', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        this.setState({
-          user: response.data,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          failedAuth: true,
-        });
-      });
-  }
-
-  handleLogout = () => {
-    sessionStorage.removeItem('token');
-    this.setState({
-      user: null,
-      failedAuth: true,
-    });
-  };
+  handleLogout = () => {};
 
   render() {
     if (this.state.failedAuth) {
@@ -76,7 +46,7 @@ class Dashboard extends Component {
         <p>Phone: {phone}</p>
         <p>Address: {address}</p>
 
-        <button className="dashboard__logout" onClick={this.handleLogout}>
+        <button className="dashboard__logout" onClick={null}>
           Log out
         </button>
       </main>

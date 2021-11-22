@@ -10,22 +10,7 @@ class Login extends Component {
     success: false,
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    axios
-      .post('http://localhost:8080/api/users/login', {
-        email: event.target.email.value,
-        password: event.target.password.value,
-      })
-      .then((response) => {
-        sessionStorage.setItem('token', response.data.token);
-        this.setState({ success: true });
-      })
-      .catch((error) => {
-        this.setState({ error: error.response.data });
-      });
-  };
+  handleSubmit = (event) => {};
 
   render() {
     return (
@@ -38,10 +23,8 @@ class Login extends Component {
 
           <button className="login__button">Log in</button>
 
-          {this.state.error && (
-            <div className="login__message">{this.state.error}</div>
-          )}
-          {this.state.success && <Redirect to="/" />}
+          {/* <div className="login__message">{this.state.error}</div>
+          <Redirect to="/" /> */}
         </form>
         <p>
           Need an account? <Link to="/signup">Sign up</Link>

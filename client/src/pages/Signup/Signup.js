@@ -5,31 +5,7 @@ import axios from 'axios';
 import Input from '../../components/Input/Input';
 
 class Signup extends Component {
-  state = {
-    error: '',
-    success: false,
-  };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    axios
-      .post('http://localhost:8080/api/users/register', {
-        email: event.target.email.value,
-        password: event.target.password.value,
-        first_name: event.target.first_name.value,
-        last_name: event.target.last_name.value,
-        phone: event.target.phone.value,
-        address: event.target.address.value,
-      })
-      .then(() => {
-        this.setState({ success: true, error: '' });
-        event.target.reset();
-      })
-      .catch((error) => {
-        this.setState({ success: false, error: error.response.data });
-      });
-  };
+  handleSubmit = (event) => {};
 
   render() {
     return (
@@ -46,12 +22,9 @@ class Signup extends Component {
 
           <button className="signup__button">Sign up</button>
 
-          {this.state.success && (
-            <div className="signup__message">Signed up!</div>
-          )}
-          {this.state.error && (
-            <div className="signup__message">{this.state.error}</div>
-          )}
+          {/* <div className="signup__message">Signed up!</div>
+
+          <div className="signup__message">{this.state.error}</div> */}
         </form>
         <p>
           Have an account? <Link to="/login">Log in</Link>
