@@ -12,6 +12,8 @@ exports.signUpUser = (req, res) => {
       User.create(userObj).then((user) => {
         // In MySQL, inserting a row gives something like [id]
         // where "id" is the id of the new row
+        console.log(user);
+        console.log(user[0]);
         const token = jwt.sign(
           { email: userObj.email },
           process.env.JWT_SECRET,
@@ -19,9 +21,9 @@ exports.signUpUser = (req, res) => {
             expiresIn: '24h',
           }
         );
-        res
-          .status(201)
-          .json({ user: { id: user[0], email: userObj.email }, token });
+        userObj.id = user[0];
+        delete userObj.password;
+        res.status(201).json({ user: userObj, token });
       });
     })
     .catch((err) => {
@@ -60,8 +62,7 @@ exports.getCurrentUser = (req, res, next) => {
   // If our code gets here, it went through our middleware
   // first so we should have our email address of the logged in person through req.user.
   User.findOne({ email: req.user }).then((user) => {
-    // Respond with the user data (except password)
-    delete user.password;
+    // Respond with the user data (password isn't included in findOne)
     return res.json({ user });
   });
 };
