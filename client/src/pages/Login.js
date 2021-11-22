@@ -21,10 +21,12 @@ class Login extends Component {
       .post('/api/users/login', this.state.formData)
       .then((res) => {
         sessionStorage.setItem('token', res.data.token);
-        this.setState({ success: true });
+        this.props.onLoginSuccess(res.data.user);
         // FIXME: redirect to the original sender page
+        this.props.history.push('/');
       })
       .catch((error) => {
+        console.log(error);
         this.setState({ isError: true });
       });
   };
@@ -34,7 +36,6 @@ class Login extends Component {
       <div className="login">
         <h1>Login</h1>
         {this.state.isError && <div className="err">ERROR!</div>}
-        {this.state.success && <Redirect to="/" />}
         <form onSubmit={this.handleSubmit}>
           <label>Email</label>
           <input type="email" name="email" onChange={this.handleChange} />

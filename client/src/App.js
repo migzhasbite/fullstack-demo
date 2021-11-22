@@ -1,77 +1,69 @@
 import { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import axios from 'axios';
-import Nav from './components/Nav';
-import AuthButton from './components/AuthButton';
+import jwt_decode from 'jwt-decode';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
+import Nav from './components/Nav';
 import './App.css';
 
-/**
- * The component will have the following states:
- * - user (default: null)
- * - hasFailedAuth (default: false)
- *
- * STRATEGY
- * Run this immediately:
- * 1. Is there a sessionStorage item named "token"?
- *    - no? well, that was easy; they're not logged in. We're done - set hasFailedAuth to true.
- *    - If so, we'll have to continue.
- * 2. We're going to call /api/v1/users/current.
- */
 class App extends Component {
   state = {
-    user: null,
-    hasFailedAuth: false,
+    currentUser: null,
   };
 
   componentDidMount() {
     const token = sessionStorage.getItem('token');
-
-    if (!token) {
-      return this.setState({ hasFailedAuth: true });
+    if (token) {
+      this.setState({ currentUser: jwt_decode(token) });
     }
-
-    // Get the data from the API
-    axios
-      .get('/api/users/current', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log({ response });
-        this.setState({
-          user: response.data,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          hasFailedAuth: true,
-        });
-      });
   }
 
+  handleLoginSuccess = (user) => {
+    console.log(user);
+    this.setState({ currentUser: user });
+  };
+
   handleLogout = () => {
+    console.log('handleLogout on App');
     sessionStorage.removeItem('token');
     this.setState({
-      user: null,
-      hasFailedAuth: true,
+      currentUser: null,
     });
   };
 
   render() {
-    // Note that forceRefresh={true} - super important, otherwise the Nav component won't see any changes when we log in and out.
     return (
       <Router>
-        {/* <Nav hasFailedauth={this.state.hasFailedauth} user={this.state.user} /> */}
-        <AuthButton />
+        <Nav user={this.state.currentUser} />
         <Switch>
-          <Route path={'/login'} component={Login} />
-          <Route path={'/logout'} component={Logout} />
+          <Route
+            path={'/login'}
+            render={(routerProps) => (
+              <Login
+                {...routerProps}
+                onLoginSuccess={(user) => {
+                  this.handleLoginSuccess(user);
+                }}
+              />
+            )}
+          />
+          <Route
+            path={'/logout'}
+            render={(routerProps) => (
+              <Logout
+                {...routerProps}
+                handleLogout={() => {
+                  this.handleLogout();
+                }}
+              />
+            )}
+          />
           <ProtectedRoute path={'/dashboard'} component={Dashboard} />
           <Route path={'/'} exact component={Home} />
         </Switch>

@@ -7,7 +7,6 @@ import { Route, Redirect } from 'react-router-dom';
  * it's used in App.js
  */
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-  console.log(rest);
   const token = sessionStorage.getItem('token');
   return (
     <Route

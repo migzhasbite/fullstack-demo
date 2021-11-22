@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import AuthButton from './AuthButton';
 
 /**
  * The navbar gets should display, no matter if the user is logged in or out.
@@ -22,9 +21,9 @@ const Navbar = ({ user, hasFailedAuth }) => {
               Dashboard
             </Link>
           </li>
-          <li className="listItem">
-            <AuthButton />
-          </li>
+          <Link className="link" to="Logout">
+            Logout
+          </Link>
         </ul>
       ) : (
         <ul className="list">
