@@ -18,12 +18,24 @@ Content-Type: application/json
 
 ###
 
+GET http://localhost:8080/api/users/current HTTP/1.1
+Content-Type: application/json
+
+###
+
+
+GET http://localhost:8080/api/users/current HTTP/1.1
+Content-Type: application/json
+Authorization: jwt asdfasdfasdfasdfasdfasdfasdf
+
+###
+
 // Replace the long string with the token 
 // string you get from the HTTP request above.
 
 GET http://localhost:8080/api/users/current HTTP/1.1
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RpbmdAZ21haWwuY29tIiwiaWF0IjoxNjM3MzM3NjM3LCJleHAiOjE2Mzc0MjQwMzd9.VEM44UHZ3YtlZPbm53CEwuk7gYlE8rUf9B8kcP8OdJI
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RpbmdAZ21haWwuY29tIiwiaWF0IjoxNjM3NjAyNzY4LCJleHAiOjE2Mzc2ODkxNjh9.ec6_5UV-Y9uOWYLINx_Iqd_gOo-65XPXM8KNGp0uPIg
 
 ###
 
@@ -32,5 +44,5 @@ Content-Type: application/json
 
 {
     "email": "testing@gmail.com",
-    "password": "noaaae"
+    "password": "asdflkjasd;lfkjasd;lfkj"
 }

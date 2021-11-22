@@ -13,17 +13,22 @@ class Login extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
+    // Make an API call to the login API and pass in our form data.
     axios
-      .post('http://localhost:8080/api/users/login', {
+      .post('/api/users/login', {
         email: event.target.email.value,
         password: event.target.password.value,
       })
       .then((response) => {
+        // If the API returns OK, it'll have a user and a token
+        // Set our token to sessionStorage
         sessionStorage.setItem('token', response.data.token);
+        // And change our success state to true
         this.setState({ success: true });
       })
       .catch((error) => {
-        this.setState({ error: error.response.data });
+        // Otherwise, leave success state alone, and set the error state to our resonse data
+        this.setState({ error: error.message });
       });
   };
 

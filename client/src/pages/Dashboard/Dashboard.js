@@ -10,46 +10,49 @@ class Dashboard extends Component {
   };
 
   componentDidMount() {
+    // we'll need to check for a token
+    // if the token is there, save it as a variable called "token"
     const token = sessionStorage.getItem('token');
+    console.log(token);
 
+    // if the token is not there, we are definitely not logged in...
+    // we should set our failedAuth state to true and return out
     if (!token) {
       return this.setState({ failedAuth: true });
     }
 
-    // Get the data from the API
+    // if we DO have a token...
+    // ...we'll make that call to our /api/users/current API...
+    // and we'll bring in that token as an Authorization header that
+    // says "Bearer TOKEN-GOES-HERE"
     axios
       .get('/api/users/current', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        this.setState({
-          user: response.data,
-        });
+        // If that works, set the user state to the API result and render to page
+        this.setState({ user: response.data });
       })
       .catch((error) => {
-        this.setState({
-          failedAuth: true,
-        });
+        // ...Otherwise we'll set that failedAuth state from line 9 to true.
+        this.setState({ failedAuth: true });
       });
   }
 
   handleLogout = () => {
+    // we should be able to "log out" by just removing that token sessionStorage.
     sessionStorage.removeItem('token');
-    this.setState({
-      user: null,
-      failedAuth: true,
-    });
+    // After that, we'll save the states of our user to null, and failedAuth to true
+    this.setState({ user: null, failedAuth: true });
   };
 
   render() {
+    // if that failedAuth state is TRUE, tell us that we need to log in.
     if (this.state.failedAuth) {
       return (
         <main className="dashboard">
           <p>
-            You must be logged in to see this page.{' '}
-            <Link to="/login">Log in</Link>
+            You must be <Link to="/login">logged in</Link> to see this page.
           </p>
         </main>
       );
@@ -63,18 +66,12 @@ class Dashboard extends Component {
       );
     }
 
-    const { first_name, last_name, email, phone, address } = this.state.user;
+    const { email } = this.state.user;
 
     return (
       <main className="dashboard">
         <h1 className="dashboard__title">Dashboard</h1>
-        <p>
-          Welcome back, {first_name} {last_name}! 👋
-        </p>
-        <h2>My Profile</h2>
-        <p>Email: {email}</p>
-        <p>Phone: {phone}</p>
-        <p>Address: {address}</p>
+        <p>Welcome back, {email}! 👋</p>
 
         <button className="dashboard__logout" onClick={this.handleLogout}>
           Log out

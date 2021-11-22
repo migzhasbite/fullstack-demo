@@ -12,6 +12,7 @@ class Signup extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    // call our register API with our form
 
     axios
       .post('http://localhost:8080/api/users/register', {
@@ -23,10 +24,12 @@ class Signup extends Component {
         address: event.target.address.value,
       })
       .then(() => {
+        // when it's done, set our state
         this.setState({ success: true, error: '' });
         event.target.reset();
       })
       .catch((error) => {
+        // if it breaks, set our success state to false and errors to the appropriate value
         this.setState({ success: false, error: error.response.data });
       });
   };
