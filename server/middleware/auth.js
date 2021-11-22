@@ -9,7 +9,6 @@ module.exports = (req, res, next) => {
     }
     if (jwt.verify(token, process.env.JWT_SECRET)) {
       req.decode = jwt.decode(token);
-      console.log(req.decode);
       // These are the droids we're looking for. Slip the email address
       // inside our request and go on our merry way.
       req.user = req.decode.email;
