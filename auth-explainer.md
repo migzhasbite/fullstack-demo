@@ -34,3 +34,5 @@
 - cookies
 
 https://stackoverflow.com/questions/19867599/what-is-the-difference-between-localstorage-sessionstorage-session-and-cookies
+
+https://github.com/philuchansky/react-express-jwt
