@@ -14,6 +14,7 @@ exports.signUpUser = (req, res) => {
         // where "id" is the id of the new row
         console.log(user);
         console.log(user[0]);
+        // create our token by using jwt.sign
         const token = jwt.sign(
           { email: userObj.email },
           process.env.JWT_SECRET,
@@ -22,6 +23,7 @@ exports.signUpUser = (req, res) => {
           }
         );
         userObj.id = user[0];
+        // reminder that the PW shouldn't be included
         delete userObj.password;
         res.status(201).json({ user: userObj, token });
       });
@@ -37,13 +39,17 @@ exports.signInUser = (req, res) => {
 
   User.findOneWithPW({ email: req.body.email })
     .then((user) => {
+      // make a copy of the user for later
       confirmedUser = { ...user };
+      // does the user table password match the login form password?
       return bcrypt.compare(req.body.password, user.password);
     })
     .then((isMatch) => {
+      // if it's not a match, return a 400
       if (!isMatch) {
         return res.status(400).json({ message: 'Invalid credentials.' });
       }
+      // but it is a match, so create our token
       const token = jwt.sign(
         { email: confirmedUser.email },
         process.env.JWT_SECRET,

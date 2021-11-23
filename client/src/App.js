@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
 import ProtectedRoute from './components/ProtectedRoute';
