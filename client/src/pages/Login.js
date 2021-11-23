@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import './Login.scss';
 
 class Login extends Component {
   state = {
@@ -33,17 +33,40 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="login">
-        <h1>Login</h1>
-        {this.state.isError && <div className="err">ERROR!</div>}
-        <form onSubmit={this.handleSubmit}>
-          <label>Email</label>
-          <input type="email" name="email" onChange={this.handleChange} />
-          <label>Password</label>
-          <input type="password" name="password" onChange={this.handleChange} />
-          <button>Login</button>
+      <main className="login-page">
+        <form className="login" onSubmit={this.handleSubmit}>
+          <h1 className="login__title">Login</h1>
+          <div className="field">
+            <label htmlFor="email" className="field__label">
+              Email
+            </label>
+            <input
+              className="field__input"
+              type="email"
+              name="email"
+              id="email"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password" className="field__label">
+              Password
+            </label>
+            <input
+              className="field__input"
+              type="password"
+              name="password"
+              id="password"
+              onChange={this.handleChange}
+            />
+          </div>
+          <button className="login__button">Login</button>
+
+          {this.state.isError && (
+            <div className="login__message">{this.state.error}!</div>
+          )}
         </form>
-      </div>
+      </main>
     );
   }
 }

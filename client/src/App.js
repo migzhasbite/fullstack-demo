@@ -10,7 +10,7 @@ import Logout from './pages/Logout';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Nav from './components/Nav';
-import './App.css';
+import './App.scss';
 
 class App extends Component {
   state = {

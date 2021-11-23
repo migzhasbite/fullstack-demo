@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-
+import './Nav.scss';
 /**
  * The navbar gets should display, no matter if the user is logged in or out.
  *  - If the user is logged in, show the logged in user's metadata.
@@ -10,23 +10,30 @@ const Navbar = ({ user, hasFailedAuth }) => {
     <div className="navbar">
       <span className="logo">
         <Link className="link" to="/">
-          Lama App
+          Demo App
         </Link>
       </span>
       {user ? (
         <ul className="list">
           <li className="listItem">Welcome, {user.email}</li>
-          <li>
+          <li className="listItem">
             <Link className="link" to="dashboard">
               Dashboard
             </Link>
           </li>
-          <Link className="link" to="Logout">
-            Logout
-          </Link>
+          <li className="listItem">
+            <Link className="link" to="Logout">
+              Logout
+            </Link>
+          </li>
         </ul>
       ) : (
         <ul className="list">
+          <li className="listItem">
+            <Link className="link" to="dashboard">
+              Dashboard (login required)
+            </Link>
+          </li>
           <li className="listItem">
             <Link className="link" to="login">
               Login
